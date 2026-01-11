@@ -1,35 +1,31 @@
 import csv
 import os
 from wikibaseintegrator import WikibaseIntegrator
-from wikibaseintegrator.models.claim import Claim
-from wikibaseintegrator.datatypes import Time
+from wikibaseintegrator.datatypes import CommonsMedia
+from wikibaseintegrator.wbi_enums import ActionIfExists
 
-# OAuth setup
-wbi = WikibaseIntegrator(
-    user=os.getenv("WIKIDATA_USER"),
-    token=os.getenv("WIKIDATA_TOKEN"),
-    mediawiki_api_url="https://www.wikidata.org/w/api.php"
-)
+user = os.getenv("WIKIDATA_USER")
+token = os.getenv("WIKIDATA_TOKEN")
 
-with open("images.csv", encoding="utf-8") as csvfile:
-    reader = csv.DictReader(csvfile)
+wbi = WikibaseIntegrator(user=user, token=token)
+
+csv_file = "P18-CRACO-QID-GithubQuickstatements.csv"
+
+with open(csv_file, newline="", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
     for row in reader:
-        qid = row['qid']
-        filename = row['filename']
-        reference_url = row.get('reference_url')
+        qid = row["QID"].strip()
+        filename = row["P18"].strip()
 
-        # Maak P18 claim
-        claim = Claim(prop_nr="P18", value=filename)
+        item = wbi.item.get(entity_id=qid)
 
-        # Voeg reference toe
-        if reference_url:
-            claim.add_reference([
-                Claim(prop_nr="S854", value=reference_url),
-                Claim(prop_nr="S813", value=Time(year=2026, month=1, day=11))
-            ])
+        item.claims.add(
+            CommonsMedia(
+                prop_nr="P18",
+                value=filename,
+                action_if_exists=ActionIfExists.REPLACE
+            )
+        )
 
-        # Haal item op en voeg claim toe
-        wbi_item = wbi.item.get(qid)
-        wbi_item.add_claims([claim])
-        wbi_item.write()
-        print(f"{qid} updated with {filename}")
+        item.write(summary="Add image (P18) from Wikimedia Commons")
+        print(f"✔ {qid} → {filename}")
