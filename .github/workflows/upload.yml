@@ -8,23 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-  - name: Install dependencies
-    run: |
-      python -m pip install --upgrade pip
-      pip install "WikibaseIntegrator==0.12.3" --no-cache-dir
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "WikibaseIntegrator==0.12.3" --no-cache-dir
 
-
-
-    - name: Run P18 upload script
-      env:
-        WIKIDATA_USER: ${{ secrets.WIKIDATA_USER }}
-        WIKIDATA_TOKEN: ${{ secrets.WIKIDATA_TOKEN }}
-      run: python upload_p18.py
+      - name: Run P18 upload script
+        env:
+          WIKIDATA_CONSUMER_KEY: ${{ secrets.WIKIDATA_CONSUMER_KEY }}
+          WIKIDATA_CONSUMER_SECRET: ${{ secrets.WIKIDATA_CONSUMER_SECRET }}
+        run: python upload_p18.py
