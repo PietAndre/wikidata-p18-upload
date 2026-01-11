@@ -1,9 +1,6 @@
-import csv
+from wikibaseintegrator.wbi_login import OAuth1
 import os
 from wikibaseintegrator import WikibaseIntegrator
-from wikibaseintegrator.datatypes import CommonsMedia
-from wikibaseintegrator.wbi_enums import ActionIfExists
-from wikibaseintegrator.wbi_login import OAuth1
 
 login = OAuth1(
     consumer_key=os.getenv("WIKIDATA_CONSUMER_KEY"),
@@ -32,3 +29,4 @@ with open(csv_file, newline="", encoding="utf-8") as f:
 
         item.write(summary="Add image (P18) from Wikimedia Commons")
         print(f"✔ {qid} → {filename}")
+
