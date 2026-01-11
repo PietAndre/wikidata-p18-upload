@@ -3,11 +3,11 @@ import os
 from wikibaseintegrator import WikibaseIntegrator
 from wikibaseintegrator.datatypes import CommonsMedia
 from wikibaseintegrator.wbi_enums import ActionIfExists
-from wikibaseintegrator.wbi_login import Login
+from wikibaseintegrator.wbi_login import OAuth1
 
-login = Login(
-    consumer_token=os.getenv("WIKIDATA_CONSUMER_KEY"),
-    consumer_secret=os.getenv("WIKIDATA_CONSUMER_SECRET"),
+login = OAuth1(
+    consumer_key=os.getenv("WIKIDATA_CONSUMER_KEY"),
+    consumer_secret=os.getenv("WIKIDATA_CONSUMER_SECRET")
 )
 
 wbi = WikibaseIntegrator(login=login)
