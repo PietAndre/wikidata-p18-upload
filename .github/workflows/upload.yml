@@ -1,0 +1,26 @@
+name: Upload P18 to Wikidata
+
+on:
+  workflow_dispatch:  # handmatig triggeren
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install WikibaseIntegrator
+
+    - name: Run P18 upload script
+      env:
+        WIKIDATA_USER: ${{ secrets.WIKIDATA_USER }}
+        WIKIDATA_TOKEN: ${{ secrets.WIKIDATA_TOKEN }}
+      run: python upload_p18.py
